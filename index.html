@@ -5,136 +5,146 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <meta name="darkreader-lock">
-<meta name="theme-color" content="#cfe8fb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141a2b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fff7e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1b1e2b" media="(prefers-color-scheme: dark)">
 <title>Mon mot de passe secret</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
 <style>
   /*
-   * The page ships its own light and dark themes. Declaring both stops
-   * browsers from auto-darkening it (which broke the contrast).
-   * Text/background pairs below aim for WCAG AA (4.5:1) or better.
+   * Art direction: "stickers". Thick outlines, hard offset shadows, flat
+   * fills, cream paper background. The page ships its own light and dark
+   * themes (declaring both stops browsers from auto-darkening it).
+   * Text/background pairs aim for WCAG AA (4.5:1) or better.
    */
   :root {
     color-scheme: light dark;
-    --bg-top: #cfe8fb;
-    --bg-bottom: #fdf3dc;
+    --paper: #fff7e8;
+    --dots: rgba(31,35,51,0.07);
     --ink: #1f2333;
-    --soft: #4a5068;
+    --soft: #474d63;
+    --line: #1f2333;
     --card: #ffffff;
-    --card-shadow: 0 2px 0 rgba(31,35,51,0.06), 0 12px 32px rgba(31,35,51,0.10);
-    --panel: #f3f5fa;
-    --panel-border: #dfe3ec;
+    --panel: #ffffff;
 
-    --animal-bg: #e3f5e8;  --animal-ink: #17622f;
-    --vehicle-bg: #fde7ef; --vehicle-ink: #9c1748;
-    --hour-bg: #fff0d9;    --hour-ink: #8a4b00;
+    --animal-bg: #b8f2c9;  --animal-ink: #1f2333;
+    --vehicle-bg: #ffc2d6; --vehicle-ink: #1f2333;
+    --hour-bg: #ffe08a;    --hour-ink: #1f2333;
+    --color-bg: #eef0f5;
+
+    --pw-animal: #17622f;
     --pw-color: #0d4fa0;
+    --pw-vehicle: #9c1748;
+    --pw-hour: #8a4b00;
     --pw-sep: #5f6480;
 
-    --story-bg: #fff6dc;
-    --button: #c2410c;     --button-ink: #ffffff; --button-edge: #8f300a;
-    --button2: #e7ebf3;    --button2-ink: #1f2333; --button2-edge: #c9cfdc;
-    --rule-bg: #eceff5;    --rule-ink: #4a5068;
-    --rule-ok-bg: #d4f1dc; --rule-ok-ink: #155c2c;
-    --tip-bg: rgba(255,255,255,0.8);
-    --code-bg: #e7ebf3;
+    --story-bg: #fff1c7;
+    --button: #ff7a45;     --button-ink: #1f2333;
+    --button2: #ffffff;    --button2-ink: #1f2333;
+    --rule-bg: #ffffff;    --rule-ink: #474d63;
+    --rule-ok-bg: #b8f2c9; --rule-ok-ink: #1f2333;
+    --tip-bg: #ffffff;
+    --code-bg: #ffe08a;
 
-    --radius: 20px;
+    --stroke: 3px;
+    --lift: 4px;
+    --radius: 18px;
     --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg-top: #141a2b;
-      --bg-bottom: #10131c;
-      --ink: #eef0f6;
-      --soft: #b5bbd0;
-      --card: #1c2030;
-      --card-shadow: 0 12px 32px rgba(0,0,0,0.45);
-      --panel: #12151f;
-      --panel-border: #2c3247;
+      --paper: #1b1e2b;
+      --dots: rgba(246,239,224,0.06);
+      --ink: #f6efe0;
+      --soft: #cfc8b8;
+      --line: #f6efe0;
+      --card: #262b3d;
+      --panel: #1b1e2b;
 
-      --animal-bg: #173a24;  --animal-ink: #8ee6a8;
-      --vehicle-bg: #3d1626; --vehicle-ink: #ff9ec2;
-      --hour-bg: #3a2a10;    --hour-ink: #ffc670;
+      --animal-bg: #1f5a35;  --animal-ink: #f6efe0;
+      --vehicle-bg: #7a1f45; --vehicle-ink: #f6efe0;
+      --hour-bg: #6e4a00;    --hour-ink: #f6efe0;
+      --color-bg: #1b1e2b;
+
+      --pw-animal: #8ee6a8;
       --pw-color: #9ccbff;
-      --pw-sep: #8b91a8;
+      --pw-vehicle: #ff9ec2;
+      --pw-hour: #ffc670;
+      --pw-sep: #a9a397;
 
-      --story-bg: #262b3d;
-      --button2: #2a2f42;    --button2-ink: #eef0f6; --button2-edge: #171a26;
-      --rule-bg: #262b3d;    --rule-ink: #b5bbd0;
-      --rule-ok-bg: #1d3b27; --rule-ok-ink: #8ee6a8;
-      --tip-bg: #1c2030;
-      --code-bg: #2a2f42;
+      --story-bg: #33384d;
+      --button2: #262b3d;    --button2-ink: #f6efe0;
+      --rule-bg: #262b3d;    --rule-ink: #cfc8b8;
+      --rule-ok-bg: #1f5a35; --rule-ok-ink: #f6efe0;
+      --tip-bg: #262b3d;
+      --code-bg: #6e4a00;
     }
-    .cloud { display: none; }
   }
 
   * { box-sizing: border-box; }
-  html { background: var(--bg-bottom); }
+  html { background: var(--paper); }
   body {
     margin: 0;
     font-family: var(--font);
     color: var(--ink);
     text-align: center;
-    background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 70%) no-repeat;
+    background-color: var(--paper);
+    background-image: radial-gradient(var(--dots) 1.5px, transparent 1.6px);
+    background-size: 22px 22px;
     overflow-x: hidden;
   }
 
-  /* Drifting clouds (light theme only) */
-  .sky { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-  .cloud {
-    position: absolute;
-    font-size: 3.5rem;
-    opacity: 0.7;
-    animation: drift linear infinite;
-  }
-  .cloud:nth-child(1) { top: 4%;  animation-duration: 60s; animation-delay: -10s; }
-  .cloud:nth-child(2) { top: 16%; animation-duration: 80s; animation-delay: -45s; font-size: 2.6rem; }
-  @keyframes drift {
-    from { transform: translateX(-20vw); }
-    to   { transform: translateX(120vw); }
+  /* Shared sticker look */
+  .sticker {
+    border: var(--stroke) solid var(--line);
+    box-shadow: var(--lift) var(--lift) 0 var(--line);
   }
 
   main {
-    position: relative;
-    z-index: 1;
     max-width: 640px;
     margin: 0 auto;
-    padding: 1.8rem 1rem calc(3rem + env(safe-area-inset-bottom));
+    padding: 1.6rem 1rem calc(3rem + env(safe-area-inset-bottom));
   }
+
+  /* Title as a slightly tilted label */
   h1 {
-    font-size: clamp(1.6rem, 6vw, 2.3rem);
+    display: inline-block;
     margin: 0;
+    padding: 0.35rem 1rem 0.45rem;
+    font-size: clamp(1.45rem, 6vw, 2.1rem);
+    font-weight: 900;
     color: var(--ink);
+    background: var(--card);
+    border-radius: 14px;
+    transform: rotate(-1.5deg);
   }
-  .sub { color: var(--soft); margin: 0.4rem 0 1.4rem; font-size: 1.05rem; }
+  .sub { color: var(--soft); margin: 0.9rem 0 1.3rem; font-size: 1.05rem; font-weight: 600; }
 
   .card {
     background: var(--card);
     border-radius: 26px;
-    padding: 1.3rem 1rem 1.3rem;
-    box-shadow: var(--card-shadow);
+    padding: 1.2rem 1rem 1.3rem;
+    --lift: 6px;
   }
 
   /* The four slot machine reels */
   .reels {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.6rem;
+    gap: 0.75rem;
   }
   @media (max-width: 520px) { .reels { grid-template-columns: repeat(2, 1fr); } }
   .reel {
     border-radius: var(--radius);
-    padding: 0.8rem 0.3rem 0.7rem;
-    border: 2px solid transparent;
-    transition: background-color 0.35s, border-color 0.35s, color 0.35s;
+    padding: 0.75rem 0.3rem 0.65rem;
+    transition: background-color 0.3s, color 0.3s;
   }
+  .reel:nth-child(odd)  { transform: rotate(-1deg); }
+  .reel:nth-child(even) { transform: rotate(1deg); }
   .reel .label {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    font-weight: 800;
+    font-weight: 900;
   }
   .reel .pic {
     font-size: clamp(2.6rem, 11vw, 3.2rem);
@@ -142,11 +152,11 @@
     height: 1.3em;
     display: block;
   }
-  .reel .word { font-weight: 800; font-size: 1.15rem; min-height: 1.4em; }
+  .reel .word { font-weight: 900; font-size: 1.15rem; min-height: 1.4em; }
   .reel.animal  { background: var(--animal-bg);  color: var(--animal-ink); }
   .reel.vehicle { background: var(--vehicle-bg); color: var(--vehicle-ink); }
   .reel.hour    { background: var(--hour-bg);    color: var(--hour-ink); }
-  .reel.color   { background: var(--panel);      color: var(--ink); border-color: var(--panel-border); }
+  .reel.color   { background: var(--color-bg);   color: var(--ink); }
   .reel.spinning .pic { animation: spin 0.12s linear infinite; filter: blur(1px); }
   .reel.landed .pic   { animation: pop 0.45s cubic-bezier(.2,1.6,.4,1); }
   @keyframes spin {
@@ -160,11 +170,10 @@
 
   /* Password */
   .password-box {
-    margin: 1.1rem 0 0;
-    padding: 0.9rem 0.6rem;
+    margin: 1.2rem 0 0;
+    padding: 0.85rem 0.6rem;
     border-radius: var(--radius);
     background: var(--panel);
-    border: 2px solid var(--panel-border);
   }
   #password {
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -180,10 +189,10 @@
     from { transform: translateY(-14px); opacity: 0; }
     to   { transform: translateY(0); opacity: 1; }
   }
-  .pw-animal  { color: var(--animal-ink); }
+  .pw-animal  { color: var(--pw-animal); }
   .pw-color   { color: var(--pw-color); }
-  .pw-vehicle { color: var(--vehicle-ink); }
-  .pw-hour    { color: var(--hour-ink); }
+  .pw-vehicle { color: var(--pw-vehicle); }
+  .pw-hour    { color: var(--pw-hour); }
   .pw-sep     { color: var(--pw-sep); }
 
   #story {
@@ -191,59 +200,63 @@
     line-height: 1.5;
     color: var(--ink);
     background: var(--story-bg);
+    border: 2px dashed var(--line);
     border-radius: var(--radius);
-    padding: 0.85rem 1rem;
-    margin: 0.7rem 0 1.2rem;
+    padding: 0.8rem 1rem;
+    margin: 1rem 0 1.3rem;
   }
 
-  /* Buttons */
-  .buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; }
+  /* Buttons: press down into their shadow */
+  .buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.8rem; }
   button {
     font-family: inherit;
     font-size: 1.05rem;
-    font-weight: 800;
-    padding: 0.8rem 1.3rem;
-    border: none;
+    font-weight: 900;
+    padding: 0.75rem 1.3rem;
     border-radius: 999px;
     cursor: pointer;
     color: var(--button2-ink);
     background: var(--button2);
-    box-shadow: 0 4px 0 var(--button2-edge);
-    transition: transform 0.1s, box-shadow 0.1s;
+    border: var(--stroke) solid var(--line);
+    box-shadow: var(--lift) var(--lift) 0 var(--line);
+    transition: transform 0.08s, box-shadow 0.08s;
   }
-  button:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--button2-edge); }
-  button:focus-visible { outline: 3px solid var(--pw-color); outline-offset: 3px; }
+  @media (hover: hover) {
+    button:hover { transform: translate(-1px, -1px); box-shadow: calc(var(--lift) + 1px) calc(var(--lift) + 1px) 0 var(--line); }
+  }
+  button:active { transform: translate(var(--lift), var(--lift)); box-shadow: 0 0 0 var(--line); }
+  button:focus-visible { outline: 3px dashed var(--pw-color); outline-offset: 4px; }
   #generate {
     flex-basis: 100%;
     max-width: 22rem;
-    margin: 0 auto;
-    font-size: 1.3rem;
-    padding: 1rem 1.6rem;
+    margin: 0 auto 0.2rem;
+    font-size: 1.35rem;
+    padding: 0.95rem 1.6rem;
     color: var(--button-ink);
     background: var(--button);
-    box-shadow: 0 5px 0 var(--button-edge);
+    --lift: 5px;
   }
-  #generate:active { box-shadow: 0 1px 0 var(--button-edge); }
   #generate .dice { display: inline-block; }
   @media (hover: hover) { #generate:hover .dice { animation: roll 0.6s ease-in-out; } }
   @keyframes roll { to { transform: rotate(360deg); } }
-  button:disabled { opacity: 0.75; cursor: wait; }
+  button:disabled { cursor: wait; }
 
   /* Rules badges */
   .rules {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 0.45rem;
     list-style: none;
     padding: 0;
-    margin: 1.2rem 0 0;
+    margin: 1.3rem 0 0;
   }
   .rules li {
-    font-size: 0.9rem;
-    font-weight: 700;
-    padding: 0.35rem 0.75rem;
+    font-size: 0.88rem;
+    font-weight: 800;
+    padding: 0.3rem 0.7rem;
     border-radius: 999px;
+    border: 2px solid var(--line);
     background: var(--rule-bg);
     color: var(--rule-ink);
     transition: background-color 0.3s, color 0.3s;
@@ -252,9 +265,9 @@
 
   /* Tips */
   .tips {
-    margin: 1.3rem 0 0;
+    margin: 1.6rem 0 0;
     display: grid;
-    gap: 0.6rem;
+    gap: 0.8rem;
     text-align: left;
   }
   .tip {
@@ -267,13 +280,15 @@
     padding: 0.8rem 1rem;
     font-size: 0.98rem;
     line-height: 1.45;
+    --lift: 3px;
   }
   .tip .icon { font-size: 1.5rem; line-height: 1; }
   code {
     font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-weight: 800;
     background: var(--code-bg);
     color: var(--ink);
-    padding: 0.05rem 0.35rem;
+    padding: 0.05rem 0.4rem;
     border-radius: 6px;
   }
 
@@ -297,46 +312,41 @@
       animation: none !important;
       transition: none !important;
     }
-    .cloud { display: none; }
   }
 </style>
 
+
 </head>
 <body>
-  <div class="sky" aria-hidden="true">
-    <span class="cloud">☁️</span>
-    <span class="cloud">☁️</span>
-  </div>
-
   <main>
-    <h1>🔐 Mon mot de passe secret</h1>
+    <h1 class="sticker">🔐 Mon mot de passe secret</h1>
     <p class="sub">Un animal, une couleur, un véhicule et l'heure du départ</p>
 
-    <div class="card">
+    <div class="card sticker">
       <div class="reels">
-        <div class="reel animal" id="reel-animal">
+        <div class="reel animal sticker" id="reel-animal">
           <div class="label">Animal</div>
           <span class="pic">❔</span>
           <div class="word"></div>
         </div>
-        <div class="reel color" id="reel-color">
+        <div class="reel color sticker" id="reel-color">
           <div class="label">Couleur</div>
           <span class="pic">❔</span>
           <div class="word"></div>
         </div>
-        <div class="reel vehicle" id="reel-vehicle">
+        <div class="reel vehicle sticker" id="reel-vehicle">
           <div class="label">Véhicule</div>
           <span class="pic">❔</span>
           <div class="word"></div>
         </div>
-        <div class="reel hour" id="reel-hour">
+        <div class="reel hour sticker" id="reel-hour">
           <div class="label">Départ</div>
           <span class="pic">❔</span>
           <div class="word"></div>
         </div>
       </div>
 
-      <div class="password-box">
+      <div class="password-box sticker">
         <div id="password" aria-live="polite">…</div>
       </div>
 
@@ -352,11 +362,11 @@
     </div>
 
     <div class="tips">
-      <div class="tip"><span class="icon">🧠</span><div><strong>Pour bien le retenir :</strong> imagine la scène dans ta tête, comme un dessin animé.</div></div>
-      <div class="tip"><span class="icon">🕒</span><div><strong>À la fin, l'heure du départ</strong> avec un <strong>H</strong> majuscule pour « heure » : <code>-3H</code>.</div></div>
-      <div class="tip"><span class="icon">➖</span><div><strong>Les mots sont séparés par un tiret</strong> <code>-</code> (la touche 6 du clavier).</div></div>
-      <div class="tip"><span class="icon">🤫</span><div><strong>C'est un secret :</strong> un mot de passe différent pour chaque site, et tu ne le donnes qu'à tes parents.</div></div>
-      <div class="tip"><span class="icon">🛡️</span><div>Rien n'est envoyé sur internet : le mot de passe est tiré au hasard dans ton navigateur.</div></div>
+      <div class="tip sticker"><span class="icon">🧠</span><div><strong>Pour bien le retenir :</strong> imagine la scène dans ta tête, comme un dessin animé.</div></div>
+      <div class="tip sticker"><span class="icon">🕒</span><div><strong>À la fin, l'heure du départ</strong> avec un <strong>H</strong> majuscule pour « heure » : <code>-3H</code>.</div></div>
+      <div class="tip sticker"><span class="icon">➖</span><div><strong>Les mots sont séparés par un tiret</strong> <code>-</code> (la touche 6 du clavier).</div></div>
+      <div class="tip sticker"><span class="icon">🤫</span><div><strong>C'est un secret :</strong> un mot de passe différent pour chaque site, et tu ne le donnes qu'à tes parents.</div></div>
+      <div class="tip sticker"><span class="icon">🛡️</span><div>Rien n'est envoyé sur internet : le mot de passe est tiré au hasard dans ton navigateur.</div></div>
     </div>
   </main>
 
@@ -461,11 +471,9 @@
     if (color) {
       reel.style.backgroundColor = color[2];
       reel.style.color = color[3];
-      reel.style.borderColor = color[0] === "Blanc" ? "#d5dae4" : "transparent";
     } else {
       reel.style.backgroundColor = "";
       reel.style.color = "";
-      reel.style.borderColor = "";
     }
   }
 
