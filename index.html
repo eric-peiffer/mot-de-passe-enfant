@@ -89,6 +89,7 @@
     margin: 0 auto;
     padding: 1.6rem 1rem calc(3rem + env(safe-area-inset-bottom));
   }
+  @media (min-width: 1000px) { main { max-width: 720px; } }
 
   /* Title as a slightly tilted label */
   h1 {
@@ -164,7 +165,7 @@
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     font-size: clamp(1.2rem, 5.5vw, 1.8rem);
     font-weight: 800;
-    word-break: break-all;
+    overflow-wrap: anywhere;
     transition: filter 0.3s;
   }
   #password.hidden { filter: blur(9px); user-select: none; }
@@ -211,10 +212,11 @@
   }
   button:active { transform: translate(var(--lift), var(--lift)); box-shadow: 0 0 0 var(--line); }
   button:focus-visible { outline: 3px dashed var(--pw-color); outline-offset: 4px; }
+  /* Alone on its row at every width: max-width would shrink the flex basis
+     and let Copier squeeze in beside it, so centre it with margins instead. */
   #generate {
-    flex-basis: 100%;
-    max-width: 22rem;
-    margin: 0 auto 0.2rem;
+    flex: 0 1 100%;
+    margin: 0 max(0px, calc((100% - 22rem) / 2)) 0.2rem;
     font-size: 1.35rem;
     padding: 0.95rem 1.6rem;
     color: var(--button-ink);
@@ -404,7 +406,7 @@
 
     <div class="tips">
       <div class="tip sticker"><span class="icon">🧠</span><div><strong>Pour bien le retenir :</strong> imagine la scène dans ta tête, comme un dessin animé.</div></div>
-      <div class="tip sticker"><span class="icon">🕒</span><div><strong>À la fin, l'heure du départ</strong> avec un <strong>H</strong> majuscule pour « heure » : <code>-3H</code>.</div></div>
+      <div class="tip sticker"><span class="icon">🕒</span><div><strong>À la fin, l'heure du départ</strong> avec un <strong>H</strong> majuscule pour «&nbsp;heure&nbsp;» : <code>-3H</code>.</div></div>
       <div class="tip sticker"><span class="icon">➖</span><div><strong>Les mots sont séparés par un tiret</strong> <code>-</code> (la touche 6 du clavier).</div></div>
       <div class="tip sticker"><span class="icon">🤫</span><div><strong>C'est un secret :</strong> un mot de passe différent pour chaque site, et tu ne le donnes qu'à tes parents.</div></div>
       <div class="tip sticker"><span class="icon">🛡️</span><div>Rien n'est envoyé sur internet : le mot de passe est tiré au hasard dans ton navigateur.</div></div>
