@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Générateur de mot de passe</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #fdf6ec;
+    color: #333;
+    margin: 0;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+  h1 { font-size: 1.8rem; margin: 0 0 0.3rem; }
+  .sub { color: #777; margin: 0 0 2rem; }
+  .card {
+    background: #fff;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  }
+  #emoji {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .tile { display: flex; flex-direction: column; align-items: center; min-width: 4.5rem; }
+  .tile .big { font-size: 3.2rem; line-height: 1.1; }
+  .tile .count { font-size: 1.6rem; line-height: 1.3; max-width: 9rem; }
+  .tile .word { font-size: 0.95rem; font-weight: bold; margin-top: 0.3rem; }
+  #password {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 1.9rem;
+    font-weight: bold;
+    word-break: break-all;
+    margin: 0.5rem 0 1rem;
+  }
+  .animal { color: #2e7d32; }
+  .couleur { color: #1565c0; }
+  .vehicule { color: #c2185b; }
+  .extra { color: #e65100; }
+  #story {
+    font-size: 1.15rem;
+    background: #fff8e1;
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    margin: 0 0 1.5rem;
+  }
+  button {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.4rem;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    margin: 0.3rem;
+  }
+  #generate { background: #ff7043; color: #fff; }
+  #copy { background: #e0e0e0; color: #333; }
+  button:active { transform: scale(0.97); }
+  .rules {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    text-align: left;
+    display: inline-block;
+  }
+  .rules li { margin: 0.2rem 0; }
+  .tips {
+    max-width: 560px;
+    margin: 1.5rem auto 0;
+    text-align: left;
+    color: #555;
+    font-size: 0.95rem;
+  }
+</style>
+</head>
+<body>
+  <h1>🔐 Mon mot de passe secret</h1>
+  <p class="sub">Un animal, une couleur, un véhicule et l'heure du départ</p>
+
+  <div class="card">
+    <div id="emoji"></div>
+    <div id="password">…</div>
+    <div id="story"></div>
+    <button id="generate" type="button">🎲 Un autre !</button>
+    <button id="copy" type="button">📋 Copier</button>
+    <ul class="rules" id="rules"></ul>
+  </div>
+
+  <div class="tips">
+    <p><strong>Pour bien le retenir :</strong> dessine l'image dans ta tête. À la fin, c'est l'heure du départ 🕒 sur l'horloge, avec un <strong>H</strong> majuscule pour « heure » : <code>-3H</code>.</p>
+    <p><strong>Les mots sont toujours séparés par un tiret <code>-</code></strong> (la touche 6 sur le clavier).</p>
+    <p><strong>Règles d'or :</strong></p>
+    <ul>
+      <li>Un mot de passe <strong>différent</strong> pour chaque site.</li>
+      <li>Ne le donne <strong>jamais</strong> à un copain ou une copine, seulement à tes parents.</li>
+      <li>Aucun mot de passe n'est envoyé sur internet : tout se passe sur cet ordinateur.</li>
+    </ul>
+  </div>
+
+<script>
+  // Short, common words with no accents and no spelling traps (no double
+  // letters a child might doubt, no "ph", no silent endings to guess).
+  // Masculine animals only, so the colour in the story never needs agreeing
+  // ("un ours tout bleu") and the child is never tempted to write "Bleue".
+  const ANIMALS = [
+    ["Chat", "🐱"], ["Chien", "🐶"], ["Lapin", "🐰"], ["Lion", "🦁"],
+    ["Ours", "🐻"], ["Loup", "🐺"], ["Panda", "🐼"], ["Koala", "🐨"],
+    ["Tigre", "🐯"], ["Cheval", "🐴"], ["Canard", "🦆"], ["Mouton", "🐑"],
+    ["Cochon", "🐷"], ["Requin", "🦈"], ["Renard", "🦊"], ["Hibou", "🦉"],
+    ["Poulpe", "🐙"], ["Singe", "🐵"], ["Crabe", "🦀"], ["Dragon", "🐉"]
+  ];
+  const COLORS = [
+    ["Rouge", "🔴"], ["Bleu", "🔵"], ["Vert", "🟢"], ["Jaune", "🟡"],
+    ["Orange", "🟠"], ["Violet", "🟣"], ["Noir", "⚫"], ["Blanc", "⚪"],
+    ["Marron", "🟤"], ["Rose", "🩷"], ["Gris", "🩶"]
+  ];
+  // Vehicles all work with "en" in the story ("en camion", "en luge"),
+  // so there is no un/une to get wrong.
+  const VEHICLES = [
+    ["Avion", "✈️"], ["Bateau", "⛵"], ["Train", "🚂"], ["Moto", "🏍️"],
+    ["Camion", "🚚"], ["Bus", "🚌"], ["Taxi", "🚕"], ["Tracteur", "🚜"],
+    ["Voiture", "🚗"], ["Tram", "🚋"], ["Kayak", "🛶"], ["Luge", "🛷"]
+  ];
+  const SEPARATOR = "-";
+
+  // Uniform random integer in [0, max) using rejection sampling.
+  function randomIndex(max) {
+    const limit = Math.floor(0x100000000 / max) * max;
+    const buffer = new Uint32Array(1);
+    do {
+      crypto.getRandomValues(buffer);
+    } while (buffer[0] >= limit);
+    return buffer[0] % max;
+  }
+
+  function pick(list) {
+    return list[randomIndex(list.length)];
+  }
+
+  function tile(bigHtml, word, bigClass) {
+    return '<div class="tile"><div class="' + bigClass + '">' + bigHtml +
+      '</div><div class="word">' + word + '</div></div>';
+  }
+
+  const emojiEl = document.getElementById("emoji");
+  const passwordEl = document.getElementById("password");
+  const storyEl = document.getElementById("story");
+  const rulesEl = document.getElementById("rules");
+  let current = "";
+
+  function generate() {
+    const [animal, animalEmoji] = pick(ANIMALS);
+    const [color, colorEmoji] = pick(COLORS);
+    const [vehicle, vehicleEmoji] = pick(VEHICLES);
+    // 1 to 12: the number is the departure time, shown as a clock face. The
+    // number is tied to "heure", which is not part of the password, so the
+    // child is never tempted to put a password word in the plural.
+    const CLOCKS = ["🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"];
+    const hour = 1 + randomIndex(12);
+    const clock = CLOCKS[hour - 1];
+    const hourWord = hour > 1 ? "heures" : "heure";
+    // Written like on a timetable: "-3H" for 3 heures.
+    const hourPart = hour + "H";
+
+    current = animal + SEPARATOR + color + SEPARATOR + vehicle + SEPARATOR + hourPart;
+
+    emojiEl.innerHTML =
+      tile(animalEmoji, animal, "big") +
+      tile(colorEmoji, color, "big") +
+      tile(vehicleEmoji, vehicle, "big") +
+      tile(clock, hourPart, "big");
+
+    passwordEl.innerHTML =
+      '<span class="animal">' + animal + '</span>' +
+      '<span class="extra">' + SEPARATOR + '</span>' +
+      '<span class="couleur">' + color + '</span>' +
+      '<span class="extra">' + SEPARATOR + '</span>' +
+      '<span class="vehicule">' + vehicle + '</span>' +
+      '<span class="extra">' + SEPARATOR + hourPart + '</span>';
+
+    storyEl.innerHTML =
+      animalEmoji + " Un <strong>" + animal.toLowerCase() + "</strong> " +
+      colorEmoji + " tout <strong>" + color.toLowerCase() + "</strong> part en " +
+      vehicleEmoji + " <strong>" + vehicle.toLowerCase() + "</strong> à " + clock + " <strong>" +
+      hour + " " + hourWord + "</strong>.";
+
+    const checks = [
+      [current.length >= 12, "Au moins 12 caractères (" + current.length + ")"],
+      [/[a-z]/.test(current), "Une minuscule"],
+      [/[A-Z]/.test(current), "Une majuscule"],
+      [/[0-9]/.test(current), "Un chiffre"],
+      [/[^A-Za-z0-9]/.test(current), "Un caractère spécial (le tiret -)"]
+    ];
+    rulesEl.innerHTML = checks
+      .map(([ok, label]) => "<li>" + (ok ? "✅" : "❌") + " " + label + "</li>")
+      .join("");
+  }
+
+  document.getElementById("generate").addEventListener("click", generate);
+  document.getElementById("copy").addEventListener("click", async () => {
+    const btn = document.getElementById("copy");
+    try {
+      await navigator.clipboard.writeText(current);
+      btn.textContent = "✅ Copié !";
+    } catch {
+      btn.textContent = "Copie impossible";
+    }
+    setTimeout(() => { btn.textContent = "📋 Copier"; }, 1500);
+  });
+
+  generate();
+</script>
+</body>
+</html>
