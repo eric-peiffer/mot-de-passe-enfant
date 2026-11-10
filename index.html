@@ -3,43 +3,94 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#7ec8f8">
+<meta name="color-scheme" content="light dark">
+<meta name="darkreader-lock">
+<meta name="theme-color" content="#cfe8fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141a2b" media="(prefers-color-scheme: dark)">
 <title>Mon mot de passe secret</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
 <style>
+  /*
+   * The page ships its own light and dark themes. Declaring both stops
+   * browsers from auto-darkening it (which broke the contrast).
+   * Text/background pairs below aim for WCAG AA (4.5:1) or better.
+   */
   :root {
-    --ink: #2b2d42;
-    --soft: #5c6178;
+    color-scheme: light dark;
+    --bg-top: #cfe8fb;
+    --bg-bottom: #fdf3dc;
+    --ink: #1f2333;
+    --soft: #4a5068;
     --card: #ffffff;
-    --animal: #2e9d4f;
-    --vehicle: #d6336c;
-    --hour: #f08c00;
-    --button: #ff6b3d;
-    --radius: 22px;
+    --card-shadow: 0 2px 0 rgba(31,35,51,0.06), 0 12px 32px rgba(31,35,51,0.10);
+    --panel: #f3f5fa;
+    --panel-border: #dfe3ec;
+
+    --animal-bg: #e3f5e8;  --animal-ink: #17622f;
+    --vehicle-bg: #fde7ef; --vehicle-ink: #9c1748;
+    --hour-bg: #fff0d9;    --hour-ink: #8a4b00;
+    --pw-color: #0d4fa0;
+    --pw-sep: #5f6480;
+
+    --story-bg: #fff6dc;
+    --button: #c2410c;     --button-ink: #ffffff; --button-edge: #8f300a;
+    --button2: #e7ebf3;    --button2-ink: #1f2333; --button2-edge: #c9cfdc;
+    --rule-bg: #eceff5;    --rule-ink: #4a5068;
+    --rule-ok-bg: #d4f1dc; --rule-ok-ink: #155c2c;
+    --tip-bg: rgba(255,255,255,0.8);
+    --code-bg: #e7ebf3;
+
+    --radius: 20px;
     --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-top: #141a2b;
+      --bg-bottom: #10131c;
+      --ink: #eef0f6;
+      --soft: #b5bbd0;
+      --card: #1c2030;
+      --card-shadow: 0 12px 32px rgba(0,0,0,0.45);
+      --panel: #12151f;
+      --panel-border: #2c3247;
+
+      --animal-bg: #173a24;  --animal-ink: #8ee6a8;
+      --vehicle-bg: #3d1626; --vehicle-ink: #ff9ec2;
+      --hour-bg: #3a2a10;    --hour-ink: #ffc670;
+      --pw-color: #9ccbff;
+      --pw-sep: #8b91a8;
+
+      --story-bg: #262b3d;
+      --button2: #2a2f42;    --button2-ink: #eef0f6; --button2-edge: #171a26;
+      --rule-bg: #262b3d;    --rule-ink: #b5bbd0;
+      --rule-ok-bg: #1d3b27; --rule-ok-ink: #8ee6a8;
+      --tip-bg: #1c2030;
+      --code-bg: #2a2f42;
+    }
+    .cloud { display: none; }
+  }
+
   * { box-sizing: border-box; }
+  html { background: var(--bg-bottom); }
   body {
     margin: 0;
-    min-height: 100vh;
     font-family: var(--font);
     color: var(--ink);
     text-align: center;
-    background: linear-gradient(180deg, #7ec8f8 0%, #b9e3ff 45%, #fff3d6 100%);
+    background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 70%) no-repeat;
     overflow-x: hidden;
   }
 
-  /* Drifting clouds in the sky */
+  /* Drifting clouds (light theme only) */
   .sky { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .cloud {
     position: absolute;
-    font-size: 4rem;
-    opacity: 0.85;
+    font-size: 3.5rem;
+    opacity: 0.7;
     animation: drift linear infinite;
   }
-  .cloud:nth-child(1) { top: 6%;  animation-duration: 55s; animation-delay: -10s; }
-  .cloud:nth-child(2) { top: 20%; animation-duration: 75s; animation-delay: -40s; font-size: 3rem; }
-  .cloud:nth-child(3) { top: 38%; animation-duration: 65s; animation-delay: -25s; font-size: 2.4rem; opacity: 0.6; }
+  .cloud:nth-child(1) { top: 4%;  animation-duration: 60s; animation-delay: -10s; }
+  .cloud:nth-child(2) { top: 16%; animation-duration: 80s; animation-delay: -45s; font-size: 2.6rem; }
   @keyframes drift {
     from { transform: translateX(-20vw); }
     to   { transform: translateX(120vw); }
@@ -48,62 +99,54 @@
   main {
     position: relative;
     z-index: 1;
-    max-width: 680px;
+    max-width: 640px;
     margin: 0 auto;
-    padding: 1.8rem 1rem 3rem;
+    padding: 1.8rem 1rem calc(3rem + env(safe-area-inset-bottom));
   }
   h1 {
-    font-size: clamp(1.7rem, 6vw, 2.4rem);
+    font-size: clamp(1.6rem, 6vw, 2.3rem);
     margin: 0;
-    letter-spacing: 0.01em;
-    text-shadow: 0 3px 0 rgba(255,255,255,0.7);
+    color: var(--ink);
   }
-  h1 .lock { display: inline-block; animation: wiggle 3s ease-in-out infinite; }
-  @keyframes wiggle {
-    0%, 85%, 100% { transform: rotate(0); }
-    90% { transform: rotate(-14deg); }
-    95% { transform: rotate(14deg); }
-  }
-  .sub { color: var(--soft); margin: 0.4rem 0 1.6rem; font-size: 1.05rem; }
+  .sub { color: var(--soft); margin: 0.4rem 0 1.4rem; font-size: 1.05rem; }
 
   .card {
     background: var(--card);
-    border-radius: 28px;
-    padding: 1.6rem 1.1rem 1.4rem;
-    box-shadow: 0 10px 0 rgba(43,45,66,0.08), 0 18px 40px rgba(43,45,66,0.12);
+    border-radius: 26px;
+    padding: 1.3rem 1rem 1.3rem;
+    box-shadow: var(--card-shadow);
   }
 
   /* The four slot machine reels */
   .reels {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.7rem;
+    gap: 0.6rem;
   }
-  @media (max-width: 480px) { .reels { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .reels { grid-template-columns: repeat(2, 1fr); } }
   .reel {
     border-radius: var(--radius);
-    padding: 0.9rem 0.3rem 0.7rem;
-    background: #f3f6fb;
-    border: 3px solid transparent;
+    padding: 0.8rem 0.3rem 0.7rem;
+    border: 2px solid transparent;
     transition: background-color 0.35s, border-color 0.35s, color 0.35s;
   }
   .reel .label {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    font-weight: 700;
-    opacity: 0.65;
+    font-weight: 800;
   }
   .reel .pic {
-    font-size: clamp(2.6rem, 11vw, 3.4rem);
+    font-size: clamp(2.6rem, 11vw, 3.2rem);
     line-height: 1.25;
     height: 1.3em;
     display: block;
   }
-  .reel .word { font-weight: 800; font-size: 1.1rem; min-height: 1.4em; }
-  .reel.animal  { background: #e6f6ea; color: var(--animal); }
-  .reel.vehicle { background: #fde8ef; color: var(--vehicle); }
-  .reel.hour    { background: #fff1db; color: var(--hour); }
+  .reel .word { font-weight: 800; font-size: 1.15rem; min-height: 1.4em; }
+  .reel.animal  { background: var(--animal-bg);  color: var(--animal-ink); }
+  .reel.vehicle { background: var(--vehicle-bg); color: var(--vehicle-ink); }
+  .reel.hour    { background: var(--hour-bg);    color: var(--hour-ink); }
+  .reel.color   { background: var(--panel);      color: var(--ink); border-color: var(--panel-border); }
   .reel.spinning .pic { animation: spin 0.12s linear infinite; filter: blur(1px); }
   .reel.landed .pic   { animation: pop 0.45s cubic-bezier(.2,1.6,.4,1); }
   @keyframes spin {
@@ -117,19 +160,17 @@
 
   /* Password */
   .password-box {
-    margin: 1.2rem 0 0.6rem;
+    margin: 1.1rem 0 0;
     padding: 0.9rem 0.6rem;
     border-radius: var(--radius);
-    background: #2b2d42;
-    color: #fff;
-    position: relative;
+    background: var(--panel);
+    border: 2px solid var(--panel-border);
   }
   #password {
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: clamp(1.25rem, 5.5vw, 1.9rem);
+    font-size: clamp(1.2rem, 5.5vw, 1.8rem);
     font-weight: 800;
     word-break: break-all;
-    letter-spacing: 0.02em;
     transition: filter 0.3s;
   }
   #password.hidden { filter: blur(9px); user-select: none; }
@@ -139,62 +180,54 @@
     from { transform: translateY(-14px); opacity: 0; }
     to   { transform: translateY(0); opacity: 1; }
   }
-  .pw-animal  { color: #7ee2a0; }
-  .pw-color   { color: #8cc8ff; }
-  .pw-vehicle { color: #ff9cc0; }
-  .pw-hour    { color: #ffc46b; }
-  .pw-sep     { color: #aab0c6; }
+  .pw-animal  { color: var(--animal-ink); }
+  .pw-color   { color: var(--pw-color); }
+  .pw-vehicle { color: var(--vehicle-ink); }
+  .pw-hour    { color: var(--hour-ink); }
+  .pw-sep     { color: var(--pw-sep); }
 
   #story {
-    font-size: 1.12rem;
+    font-size: 1.1rem;
     line-height: 1.5;
-    background: #fff8e1;
+    color: var(--ink);
+    background: var(--story-bg);
     border-radius: var(--radius);
-    padding: 0.9rem 1rem;
-    margin: 0.8rem 0 1.2rem;
-    position: relative;
-  }
-  #story::before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    margin-left: -10px;
-    border: 10px solid transparent;
-    border-top: 0;
-    border-bottom-color: #fff8e1;
+    padding: 0.85rem 1rem;
+    margin: 0.7rem 0 1.2rem;
   }
 
   /* Buttons */
   .buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; }
   button {
     font-family: inherit;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 800;
-    padding: 0.85rem 1.4rem;
+    padding: 0.8rem 1.3rem;
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    color: var(--ink);
-    background: #e9edf5;
-    box-shadow: 0 5px 0 rgba(43,45,66,0.18);
+    color: var(--button2-ink);
+    background: var(--button2);
+    box-shadow: 0 4px 0 var(--button2-edge);
     transition: transform 0.1s, box-shadow 0.1s;
   }
-  button:hover { transform: translateY(-2px); }
-  button:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(43,45,66,0.18); }
-  button:focus-visible { outline: 3px solid #1e88e5; outline-offset: 3px; }
+  button:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--button2-edge); }
+  button:focus-visible { outline: 3px solid var(--pw-color); outline-offset: 3px; }
   #generate {
-    background: var(--button);
-    color: #fff;
+    flex-basis: 100%;
+    max-width: 22rem;
+    margin: 0 auto;
     font-size: 1.3rem;
-    padding: 1rem 1.8rem;
-    box-shadow: 0 6px 0 #c94a22;
+    padding: 1rem 1.6rem;
+    color: var(--button-ink);
+    background: var(--button);
+    box-shadow: 0 5px 0 var(--button-edge);
   }
-  #generate:active { box-shadow: 0 1px 0 #c94a22; }
+  #generate:active { box-shadow: 0 1px 0 var(--button-edge); }
   #generate .dice { display: inline-block; }
-  #generate:hover .dice { animation: roll 0.6s ease-in-out; }
+  @media (hover: hover) { #generate:hover .dice { animation: roll 0.6s ease-in-out; } }
   @keyframes roll { to { transform: rotate(360deg); } }
-  button:disabled { opacity: 0.7; cursor: wait; }
+  button:disabled { opacity: 0.75; cursor: wait; }
 
   /* Rules badges */
   .rules {
@@ -204,40 +237,42 @@
     gap: 0.4rem;
     list-style: none;
     padding: 0;
-    margin: 1.3rem 0 0;
+    margin: 1.2rem 0 0;
   }
   .rules li {
     font-size: 0.9rem;
     font-weight: 700;
     padding: 0.35rem 0.75rem;
     border-radius: 999px;
-    background: #eef1f6;
-    color: var(--soft);
-    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    background: var(--rule-bg);
+    color: var(--rule-ink);
+    transition: background-color 0.3s, color 0.3s;
   }
-  .rules li.ok { background: #d9f5e1; color: #1f7a3d; transform: scale(1.05); }
+  .rules li.ok { background: var(--rule-ok-bg); color: var(--rule-ok-ink); }
 
   /* Tips */
   .tips {
-    margin: 1.4rem 0 0;
+    margin: 1.3rem 0 0;
     display: grid;
-    gap: 0.7rem;
+    gap: 0.6rem;
     text-align: left;
   }
   .tip {
     display: flex;
     gap: 0.8rem;
     align-items: flex-start;
-    background: rgba(255,255,255,0.75);
+    background: var(--tip-bg);
+    color: var(--ink);
     border-radius: var(--radius);
     padding: 0.8rem 1rem;
     font-size: 0.98rem;
     line-height: 1.45;
   }
-  .tip .icon { font-size: 1.6rem; line-height: 1; }
+  .tip .icon { font-size: 1.5rem; line-height: 1; }
   code {
     font-family: ui-monospace, Menlo, Consolas, monospace;
-    background: #eef1f6;
+    background: var(--code-bg);
+    color: var(--ink);
     padding: 0.05rem 0.35rem;
     border-radius: 6px;
   }
@@ -265,16 +300,16 @@
     .cloud { display: none; }
   }
 </style>
+
 </head>
 <body>
   <div class="sky" aria-hidden="true">
     <span class="cloud">☁️</span>
     <span class="cloud">☁️</span>
-    <span class="cloud">☁️</span>
   </div>
 
   <main>
-    <h1><span class="lock">🔐</span> Mon mot de passe secret</h1>
+    <h1>🔐 Mon mot de passe secret</h1>
     <p class="sub">Un animal, une couleur, un véhicule et l'heure du départ</p>
 
     <div class="card">
@@ -341,19 +376,20 @@
   ];
   // [word, emoji, tile background, tile text, how it reads in the story]
   const COLORS = [
-    ["Rouge", "🔴", "#e53935", "#fff", "tout"],
-    ["Bleu", "🔵", "#1e88e5", "#fff", "tout"],
-    ["Vert", "🟢", "#43a047", "#fff", "tout"],
+    // Each tile pair has a contrast ratio of at least 4.5:1.
+    ["Rouge", "🔴", "#d32f2f", "#ffffff", "tout"],
+    ["Bleu", "🔵", "#1565c0", "#ffffff", "tout"],
+    ["Vert", "🟢", "#2e7d32", "#ffffff", "tout"],
     ["Jaune", "🟡", "#fdd835", "#3b3000", "tout"],
-    ["Orange", "🟠", "#fb8c00", "#fff", "tout"],
-    ["Violet", "🟣", "#8e24aa", "#fff", "tout"],
-    ["Noir", "⚫", "#212121", "#fff", "tout"],
-    ["Blanc", "⚪", "#ffffff", "#2b2d42", "tout"],
-    ["Marron", "🟤", "#6d4c41", "#fff", "tout"],
-    ["Rose", "🩷", "#f06292", "#fff", "tout"],
-    ["Gris", "🩶", "#9e9e9e", "#fff", "tout"],
+    ["Orange", "🟠", "#fb8c00", "#2e1a00", "tout"],
+    ["Violet", "🟣", "#7b1fa2", "#ffffff", "tout"],
+    ["Noir", "⚫", "#212121", "#ffffff", "tout"],
+    ["Blanc", "⚪", "#ffffff", "#1f2333", "tout"],
+    ["Marron", "🟤", "#6d4c41", "#ffffff", "tout"],
+    ["Rose", "🩷", "#f48fb1", "#3d0a1f", "tout"],
+    ["Gris", "🩶", "#9e9e9e", "#1f2333", "tout"],
     ["Or", "🥇", "#ffc107", "#3b2a00", "tout en"],
-    ["Argent", "🥈", "#cfd8dc", "#2b2d42", "tout en"]
+    ["Argent", "🥈", "#cfd8dc", "#1f2333", "tout en"]
   ];
   // Vehicles all work with "en" in the story ("en camion", "en luge"),
   // so there is no un/une to get wrong.
