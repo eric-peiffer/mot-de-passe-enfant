@@ -50,33 +50,18 @@
     --radius: 18px;
     --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
+  /*
+   * Dark theme: same light stickers with black outlines, stuck on a dark
+   * notebook. Only the paper, the card and the text sitting directly on the
+   * paper change; every sticker keeps its light fill and dark ink.
+   */
   @media (prefers-color-scheme: dark) {
     :root {
       --paper: #1b1e2b;
-      --dots: rgba(246,239,224,0.06);
-      --ink: #f6efe0;
-      --soft: #cfc8b8;
-      --line: #f6efe0;
-      --card: #262b3d;
-      --panel: #1b1e2b;
-
-      --animal-bg: #1f5a35;  --animal-ink: #f6efe0;
-      --vehicle-bg: #7a1f45; --vehicle-ink: #f6efe0;
-      --hour-bg: #6e4a00;    --hour-ink: #f6efe0;
-      --color-bg: #1b1e2b;
-
-      --pw-animal: #8ee6a8;
-      --pw-color: #9ccbff;
-      --pw-vehicle: #ff9ec2;
-      --pw-hour: #ffc670;
-      --pw-sep: #a9a397;
-
-      --story-bg: #33384d;
-      --button2: #262b3d;    --button2-ink: #f6efe0;
-      --rule-bg: #262b3d;    --rule-ink: #cfc8b8;
-      --rule-ok-bg: #1f5a35; --rule-ok-ink: #f6efe0;
-      --tip-bg: #262b3d;
-      --code-bg: #6e4a00;
+      --dots: rgba(255,255,255,0.07);
+      --soft: #d6d0c2;
+      --line: #07080d;
+      --card: #2c3146;
     }
   }
 
@@ -113,7 +98,7 @@
     font-size: clamp(1.45rem, 6vw, 2.1rem);
     font-weight: 900;
     color: var(--ink);
-    background: var(--card);
+    background: #ffffff;
     border-radius: 14px;
     transform: rotate(-1.5deg);
   }
@@ -263,6 +248,21 @@
   }
   .rules li.ok { background: var(--rule-ok-bg); color: var(--rule-ok-ink); }
 
+  /* Number of possible passwords */
+  .combos {
+    margin: 1.3rem auto 0;
+    max-width: 26rem;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    background: #ffe08a;
+    color: var(--ink);
+    transform: rotate(-1deg);
+    --lift: 3px;
+  }
+  .combos-total { font-size: 1.1rem; font-weight: 800; }
+  .combos-total strong { font-size: 1.35rem; font-weight: 900; }
+  .combos-detail { font-size: 0.9rem; font-weight: 700; margin-top: 0.2rem; }
+
   /* Tips */
   .tips {
     margin: 1.6rem 0 0;
@@ -359,6 +359,11 @@
       </div>
 
       <ul class="rules" id="rules"></ul>
+
+      <div class="combos sticker">
+        <div class="combos-total"><span aria-hidden="true">🔢</span> <strong id="combos-total"></strong> mots de passe possibles</div>
+        <div class="combos-detail" id="combos-detail"></div>
+      </div>
     </div>
 
     <div class="tips">
@@ -602,6 +607,16 @@
     }
   }
 
+  // Computed from the lists, so it stays right when words are added.
+  function showCombinations() {
+    const fr = n => n.toLocaleString("fr-FR");
+    const total = ANIMALS.length * COLORS.length * VEHICLES.length * CLOCKS.length;
+    $("combos-total").textContent = fr(total);
+    $("combos-detail").textContent =
+      ANIMALS.length + " animaux × " + COLORS.length + " couleurs × " +
+      VEHICLES.length + " véhicules × " + CLOCKS.length + " heures";
+  }
+
   generateBtn.addEventListener("click", generate);
 
   copyBtn.addEventListener("click", async () => {
@@ -621,6 +636,7 @@
     hideBtn.textContent = hidden ? "👀 Montrer" : "🙈 Cacher";
   });
 
+  showCombinations();
   generate();
 </script>
 </body>
