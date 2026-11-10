@@ -115,34 +115,9 @@
     100% { transform: scale(1) rotate(0); }
   }
 
-  /* Road where the animal drives its vehicle */
-  .road {
-    position: relative;
-    height: 3.4rem;
-    margin: 1rem 0 0.4rem;
-    border-radius: 999px;
-    background:
-      repeating-linear-gradient(90deg, #fff 0 18px, transparent 18px 36px) center / 100% 3px no-repeat,
-      #c9cfdb;
-    overflow: hidden;
-  }
-  .rider {
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    font-size: 2.2rem;
-    transform: translateY(-55%);
-    white-space: nowrap;
-  }
-  .rider.go { animation: ride 2.6s cubic-bezier(.45,.05,.55,.95) forwards; }
-  @keyframes ride {
-    from { left: 100%; }
-    to   { left: -30%; }
-  }
-
   /* Password */
   .password-box {
-    margin: 1rem 0 0.6rem;
+    margin: 1.2rem 0 0.6rem;
     padding: 0.9rem 0.6rem;
     border-radius: var(--radius);
     background: #2b2d42;
@@ -288,7 +263,6 @@
       transition: none !important;
     }
     .cloud { display: none; }
-    .rider { left: 50%; transform: translate(-50%, -55%); }
   }
 </style>
 </head>
@@ -326,8 +300,6 @@
           <div class="word"></div>
         </div>
       </div>
-
-      <div class="road" aria-hidden="true"><span class="rider" id="rider"></span></div>
 
       <div class="password-box">
         <div id="password" aria-live="polite">…</div>
@@ -428,7 +400,6 @@
   const passwordEl = $("password");
   const storyEl = $("story");
   const rulesEl = $("rules");
-  const riderEl = $("rider");
   const generateBtn = $("generate");
   const copyBtn = $("copy");
   const hideBtn = $("hide");
@@ -506,10 +477,6 @@
         "</strong> part en " + vehicleEmoji + " <strong>" + vehicle.toLowerCase() +
         "</strong> à " + clock + " <strong>" + hour + " " + hourWord + "</strong>.";
 
-      riderEl.textContent = vehicleEmoji + animalEmoji;
-      riderEl.classList.remove("go");
-      void riderEl.offsetWidth;
-      riderEl.classList.add("go");
 
       const checks = [
         [current.length >= 12, "12 caractères ou plus"],
