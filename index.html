@@ -263,6 +263,42 @@
   .combos-total strong { font-size: 1.35rem; font-weight: 900; }
   .combos-detail { font-size: 0.9rem; font-weight: 700; margin-top: 0.2rem; }
 
+  /* Note for parents and teachers */
+  .parents {
+    margin: 1.8rem 0 0;
+    text-align: left;
+    background: #ffffff;
+    color: var(--ink);
+    border-radius: var(--radius);
+    --lift: 4px;
+  }
+  .parents summary {
+    cursor: pointer;
+    padding: 0.9rem 1rem;
+    font-weight: 900;
+    font-size: 1.08rem;
+    list-style: none;
+  }
+  .parents summary::-webkit-details-marker { display: none; }
+  .parents summary::after { content: " ▾"; }
+  .parents[open] summary::after { content: " ▴"; }
+  .parents summary:focus-visible { outline: 3px dashed var(--pw-color); outline-offset: 2px; border-radius: var(--radius); }
+  .parents .body { padding: 0 1.1rem 1.1rem; font-size: 0.97rem; line-height: 1.55; }
+  .parents h2 { font-size: 1.05rem; margin: 1.1rem 0 0.4rem; }
+  .parents p, .parents ul { margin: 0.4rem 0; }
+  .parents ul { padding-left: 1.2rem; }
+  .parents blockquote {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.8rem;
+    background: #fff7e8;
+    border-left: 4px solid var(--line);
+    border-radius: 0 10px 10px 0;
+  }
+  .parents blockquote p { margin: 0; }
+  .parents cite { display: block; font-style: normal; font-size: 0.85rem; font-weight: 700; margin-top: 0.25rem; color: #474d63; }
+  .parents a { color: #0d4fa0; font-weight: 700; }
+  .parents .sources { font-size: 0.85rem; color: #474d63; }
+
   /* Tips */
   .tips {
     margin: 1.6rem 0 0;
@@ -373,6 +409,58 @@
       <div class="tip sticker"><span class="icon">🤫</span><div><strong>C'est un secret :</strong> un mot de passe différent pour chaque site, et tu ne le donnes qu'à tes parents.</div></div>
       <div class="tip sticker"><span class="icon">🛡️</span><div>Rien n'est envoyé sur internet : le mot de passe est tiré au hasard dans ton navigateur.</div></div>
     </div>
+
+    <details class="parents sticker">
+      <summary>👨‍👩‍👧 Note aux parents et aux enseignants</summary>
+      <div class="body">
+        <h2>Pourquoi le retenir plutôt que l'écrire dans la trousse ou l'agenda ?</h2>
+        <p>Une feuille glissée dans la trousse ou l'agenda circule en classe : elle peut être vue, perdue, photographiée ou recopiée par un camarade. Et elle se trouve justement à côté de l'ordinateur sur lequel l'enfant se connecte.</p>
+        <blockquote>
+          <p>« Ne commettez pas pour autant l'erreur de les noter sur un pense-bête que vous laisseriez à proximité de votre équipement »</p>
+          <cite>Cybermalveillance.gouv.fr, <a href="https://www.cybermalveillance.gouv.fr/tous-nos-contenus/bonnes-pratiques/mots-de-passe" rel="noopener">Mots de passe : bonnes pratiques</a></cite>
+        </blockquote>
+        <blockquote>
+          <p>« Les post-it, les fichiers texte, votre smartphone ou votre boite de messagerie ne sont pas conçus pour sécuriser le stockage de vos mots de passe. »</p>
+          <cite>CNIL, <a href="https://www.cnil.fr/fr/les-conseils-de-la-cnil-pour-un-bon-mot-de-passe" rel="noopener">Les conseils de la CNIL pour un bon mot de passe</a></cite>
+        </blockquote>
+        <blockquote>
+          <p>« Je préfère l'enregistrer dans le meilleur des coffres-forts : ma mémoire ou un gestionnaire de mots de passe ! »</p>
+          <cite>CNIL, <a href="https://www.cnil.fr/fr/12-conseils-pour-utiliser-un-ordinateur-public-en-toute-securite" rel="noopener">12 conseils pour utiliser un ordinateur public en toute sécurité</a></cite>
+        </blockquote>
+
+        <h2>Pourquoi des mots tirés au hasard ?</h2>
+        <p>Des mots simples et imagés se retiennent facilement. Comme c'est l'ordinateur qui les tire au sort, et non l'enfant qui les choisit, ils ne disent rien de lui (prénom, animal, date d'anniversaire) et ne peuvent pas être devinés. C'est la méthode recommandée par l'agence de cybersécurité britannique :</p>
+        <blockquote>
+          <p>« By using a password that's made up of three random words, you're creating a password that will be 'strong enough' to keep the criminals out, but easy enough for you to remember. »</p>
+          <p><em>En utilisant un mot de passe composé de trois mots aléatoires, vous créez un mot de passe « assez robuste » pour tenir les criminels à distance, mais assez simple à retenir. (traduction)</em></p>
+          <cite>NCSC (Royaume-Uni), <a href="https://www.ncsc.gov.uk/collection/top-tips-for-staying-secure-online/three-random-words" rel="noopener">Three random words</a></cite>
+        </blockquote>
+        <p>Il faut un mot de passe différent pour chaque site :</p>
+        <blockquote>
+          <p>« Utilisez un mot de passe différent pour chaque service »</p>
+          <cite>Cybermalveillance.gouv.fr</cite>
+        </blockquote>
+
+        <h2>Le mieux : un gestionnaire de mots de passe</h2>
+        <blockquote>
+          <p>« Utilisez un gestionnaire de mots de passe ou un trousseau d'accès chiffré pour stocker vos mots de passe en toute sécurité. »</p>
+          <cite>CNIL</cite>
+        </blockquote>
+        <blockquote>
+          <p>« Il est humainement impossible de retenir les dizaines de mots de passe longs et complexes que chacun est amené à utiliser quotidiennement. »</p>
+          <cite>Cybermalveillance.gouv.fr</cite>
+        </blockquote>
+        <p>En classe, c'est souvent impossible : les élèves n'ont pas le droit d'utiliser leur téléphone et se connectent sur des ordinateurs partagés. Le gestionnaire n'est donc pas disponible au moment où l'enfant en a besoin. Un mot de passe mémorisé reste alors le meilleur compromis. À la maison, rien n'empêche de l'enregistrer aussi dans le gestionnaire de la famille.</p>
+
+        <h2>Bon à savoir</h2>
+        <ul>
+          <li><strong>Une copie à la maison, c'est possible.</strong> Écrire un mot de passe n'est pas interdit en soi : le NCSC le juge acceptable s'il est rangé en lieu sûr (« If you want to write your password down, that's also OK, provided you keep it somewhere safe. »). Gardez une copie rangée à la maison, mais jamais dans le cartable.</li>
+          <li><strong>Pour les comptes d'enfant seulement.</strong> Le générateur propose <span class="js-total"></span> combinaisons. C'est adapté à un compte scolaire, sur un site qui limite les essais répétés, mais pas à un compte important. Pour une phrase de passe utilisée seule, la CNIL recommande au moins 7 mots (<a href="https://www.cnil.fr/fr/mots-de-passe-recommandations-pour-maitriser-sa-securite" rel="noopener">recommandation de 2022</a>). Pour une messagerie ou un compte bancaire, utilisez un gestionnaire.</li>
+          <li><strong>Rien n'est transmis.</strong> Le tirage se fait dans le navigateur (<code>crypto.getRandomValues</code>) : aucun mot de passe n'est envoyé ni enregistré.</li>
+        </ul>
+        <p class="sources">Citations relevées sur les pages officielles en novembre 2026.</p>
+      </div>
+    </details>
   </main>
 
 <script>
@@ -612,6 +700,7 @@
     const fr = n => n.toLocaleString("fr-FR");
     const total = ANIMALS.length * COLORS.length * VEHICLES.length * CLOCKS.length;
     $("combos-total").textContent = fr(total);
+    document.querySelectorAll(".js-total").forEach(el => { el.textContent = fr(total); });
     $("combos-detail").textContent =
       ANIMALS.length + " animaux × " + COLORS.length + " couleurs × " +
       VEHICLES.length + " véhicules × " + CLOCKS.length + " heures";
