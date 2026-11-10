@@ -3,107 +3,355 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Générateur de mot de passe</title>
+<meta name="theme-color" content="#7ec8f8">
+<title>Mon mot de passe secret</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
 <style>
+  :root {
+    --ink: #2b2d42;
+    --soft: #5c6178;
+    --card: #ffffff;
+    --animal: #2e9d4f;
+    --vehicle: #d6336c;
+    --hour: #f08c00;
+    --button: #ff6b3d;
+    --radius: 22px;
+    --font: ui-rounded, "SF Pro Rounded", "Nunito", "Segoe UI Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
   body {
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    background: #fdf6ec;
-    color: #333;
     margin: 0;
-    padding: 2rem 1rem;
+    min-height: 100vh;
+    font-family: var(--font);
+    color: var(--ink);
     text-align: center;
+    background: linear-gradient(180deg, #7ec8f8 0%, #b9e3ff 45%, #fff3d6 100%);
+    overflow-x: hidden;
   }
-  h1 { font-size: 1.8rem; margin: 0 0 0.3rem; }
-  .sub { color: #777; margin: 0 0 2rem; }
-  .card {
-    background: #fff;
-    max-width: 560px;
+
+  /* Drifting clouds in the sky */
+  .sky { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .cloud {
+    position: absolute;
+    font-size: 4rem;
+    opacity: 0.85;
+    animation: drift linear infinite;
+  }
+  .cloud:nth-child(1) { top: 6%;  animation-duration: 55s; animation-delay: -10s; }
+  .cloud:nth-child(2) { top: 20%; animation-duration: 75s; animation-delay: -40s; font-size: 3rem; }
+  .cloud:nth-child(3) { top: 38%; animation-duration: 65s; animation-delay: -25s; font-size: 2.4rem; opacity: 0.6; }
+  @keyframes drift {
+    from { transform: translateX(-20vw); }
+    to   { transform: translateX(120vw); }
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 2rem 1.5rem;
-    border-radius: 20px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    padding: 1.8rem 1rem 3rem;
   }
-  #emoji {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
+  h1 {
+    font-size: clamp(1.7rem, 6vw, 2.4rem);
+    margin: 0;
+    letter-spacing: 0.01em;
+    text-shadow: 0 3px 0 rgba(255,255,255,0.7);
   }
-  .tile { display: flex; flex-direction: column; align-items: center; min-width: 4.5rem; }
-  .tile .big { font-size: 3.2rem; line-height: 1.1; }
-  .tile .count { font-size: 1.6rem; line-height: 1.3; max-width: 9rem; }
-  .tile .word { font-size: 0.95rem; font-weight: bold; margin-top: 0.3rem; }
+  h1 .lock { display: inline-block; animation: wiggle 3s ease-in-out infinite; }
+  @keyframes wiggle {
+    0%, 85%, 100% { transform: rotate(0); }
+    90% { transform: rotate(-14deg); }
+    95% { transform: rotate(14deg); }
+  }
+  .sub { color: var(--soft); margin: 0.4rem 0 1.6rem; font-size: 1.05rem; }
+
+  .card {
+    background: var(--card);
+    border-radius: 28px;
+    padding: 1.6rem 1.1rem 1.4rem;
+    box-shadow: 0 10px 0 rgba(43,45,66,0.08), 0 18px 40px rgba(43,45,66,0.12);
+  }
+
+  /* The four slot machine reels */
+  .reels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.7rem;
+  }
+  @media (max-width: 480px) { .reels { grid-template-columns: repeat(2, 1fr); } }
+  .reel {
+    border-radius: var(--radius);
+    padding: 0.9rem 0.3rem 0.7rem;
+    background: #f3f6fb;
+    border: 3px solid transparent;
+    transition: background-color 0.35s, border-color 0.35s, color 0.35s;
+  }
+  .reel .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    opacity: 0.65;
+  }
+  .reel .pic {
+    font-size: clamp(2.6rem, 11vw, 3.4rem);
+    line-height: 1.25;
+    height: 1.3em;
+    display: block;
+  }
+  .reel .word { font-weight: 800; font-size: 1.1rem; min-height: 1.4em; }
+  .reel.animal  { background: #e6f6ea; color: var(--animal); }
+  .reel.vehicle { background: #fde8ef; color: var(--vehicle); }
+  .reel.hour    { background: #fff1db; color: var(--hour); }
+  .reel.spinning .pic { animation: spin 0.12s linear infinite; filter: blur(1px); }
+  .reel.landed .pic   { animation: pop 0.45s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes spin {
+    from { transform: translateY(-30%); opacity: 0.4; }
+    to   { transform: translateY(30%);  opacity: 0.4; }
+  }
+  @keyframes pop {
+    0%   { transform: scale(0.4) rotate(-12deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  /* Road where the animal drives its vehicle */
+  .road {
+    position: relative;
+    height: 3.4rem;
+    margin: 1rem 0 0.4rem;
+    border-radius: 999px;
+    background:
+      repeating-linear-gradient(90deg, #fff 0 18px, transparent 18px 36px) center / 100% 3px no-repeat,
+      #c9cfdb;
+    overflow: hidden;
+  }
+  .rider {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    font-size: 2.2rem;
+    transform: translateY(-55%);
+    white-space: nowrap;
+  }
+  .rider.go { animation: ride 2.6s cubic-bezier(.45,.05,.55,.95) forwards; }
+  @keyframes ride {
+    from { left: 100%; }
+    to   { left: -30%; }
+  }
+
+  /* Password */
+  .password-box {
+    margin: 1rem 0 0.6rem;
+    padding: 0.9rem 0.6rem;
+    border-radius: var(--radius);
+    background: #2b2d42;
+    color: #fff;
+    position: relative;
+  }
   #password {
-    font-family: ui-monospace, Menlo, Consolas, monospace;
-    font-size: 1.9rem;
-    font-weight: bold;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: clamp(1.25rem, 5.5vw, 1.9rem);
+    font-weight: 800;
     word-break: break-all;
-    margin: 0.5rem 0 1rem;
+    letter-spacing: 0.02em;
+    transition: filter 0.3s;
   }
-  .animal { color: #2e7d32; }
-  .couleur { color: #1565c0; }
-  .vehicule { color: #c2185b; }
-  .extra { color: #e65100; }
+  #password.hidden { filter: blur(9px); user-select: none; }
+  #password span { display: inline-block; }
+  #password.reveal span { animation: drop 0.4s backwards; }
+  @keyframes drop {
+    from { transform: translateY(-14px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  .pw-animal  { color: #7ee2a0; }
+  .pw-color   { color: #8cc8ff; }
+  .pw-vehicle { color: #ff9cc0; }
+  .pw-hour    { color: #ffc46b; }
+  .pw-sep     { color: #aab0c6; }
+
   #story {
-    font-size: 1.15rem;
+    font-size: 1.12rem;
+    line-height: 1.5;
     background: #fff8e1;
-    border-radius: 12px;
-    padding: 0.8rem 1rem;
-    margin: 0 0 1.5rem;
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    margin: 0.8rem 0 1.2rem;
+    position: relative;
   }
+  #story::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    margin-left: -10px;
+    border: 10px solid transparent;
+    border-top: 0;
+    border-bottom-color: #fff8e1;
+  }
+
+  /* Buttons */
+  .buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.6rem; }
   button {
+    font-family: inherit;
     font-size: 1.1rem;
-    padding: 0.8rem 1.4rem;
+    font-weight: 800;
+    padding: 0.85rem 1.4rem;
     border: none;
     border-radius: 999px;
     cursor: pointer;
-    margin: 0.3rem;
+    color: var(--ink);
+    background: #e9edf5;
+    box-shadow: 0 5px 0 rgba(43,45,66,0.18);
+    transition: transform 0.1s, box-shadow 0.1s;
   }
-  #generate { background: #ff7043; color: #fff; }
-  #copy { background: #e0e0e0; color: #333; }
-  button:active { transform: scale(0.97); }
+  button:hover { transform: translateY(-2px); }
+  button:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(43,45,66,0.18); }
+  button:focus-visible { outline: 3px solid #1e88e5; outline-offset: 3px; }
+  #generate {
+    background: var(--button);
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 1rem 1.8rem;
+    box-shadow: 0 6px 0 #c94a22;
+  }
+  #generate:active { box-shadow: 0 1px 0 #c94a22; }
+  #generate .dice { display: inline-block; }
+  #generate:hover .dice { animation: roll 0.6s ease-in-out; }
+  @keyframes roll { to { transform: rotate(360deg); } }
+  button:disabled { opacity: 0.7; cursor: wait; }
+
+  /* Rules badges */
   .rules {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
     list-style: none;
     padding: 0;
-    margin: 1.5rem 0 0;
-    text-align: left;
-    display: inline-block;
+    margin: 1.3rem 0 0;
   }
-  .rules li { margin: 0.2rem 0; }
+  .rules li {
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: #eef1f6;
+    color: var(--soft);
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+  }
+  .rules li.ok { background: #d9f5e1; color: #1f7a3d; transform: scale(1.05); }
+
+  /* Tips */
   .tips {
-    max-width: 560px;
-    margin: 1.5rem auto 0;
+    margin: 1.4rem 0 0;
+    display: grid;
+    gap: 0.7rem;
     text-align: left;
-    color: #555;
-    font-size: 0.95rem;
+  }
+  .tip {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    background: rgba(255,255,255,0.75);
+    border-radius: var(--radius);
+    padding: 0.8rem 1rem;
+    font-size: 0.98rem;
+    line-height: 1.45;
+  }
+  .tip .icon { font-size: 1.6rem; line-height: 1; }
+  code {
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    background: #eef1f6;
+    padding: 0.05rem 0.35rem;
+    border-radius: 6px;
+  }
+
+  /* Emoji confetti */
+  .confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 1.8rem;
+    pointer-events: none;
+    z-index: 10;
+    animation: burst 1.1s ease-out forwards;
+  }
+  @keyframes burst {
+    from { transform: translate(0, 0) rotate(0) scale(0.6); opacity: 1; }
+    to   { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1.1); opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .cloud { display: none; }
+    .rider { left: 50%; transform: translate(-50%, -55%); }
   }
 </style>
 </head>
 <body>
-  <h1>🔐 Mon mot de passe secret</h1>
-  <p class="sub">Un animal, une couleur, un véhicule et l'heure du départ</p>
-
-  <div class="card">
-    <div id="emoji"></div>
-    <div id="password">…</div>
-    <div id="story"></div>
-    <button id="generate" type="button">🎲 Un autre !</button>
-    <button id="copy" type="button">📋 Copier</button>
-    <ul class="rules" id="rules"></ul>
+  <div class="sky" aria-hidden="true">
+    <span class="cloud">☁️</span>
+    <span class="cloud">☁️</span>
+    <span class="cloud">☁️</span>
   </div>
 
-  <div class="tips">
-    <p><strong>Pour bien le retenir :</strong> dessine l'image dans ta tête. À la fin, c'est l'heure du départ 🕒 sur l'horloge, avec un <strong>H</strong> majuscule pour « heure » : <code>-3H</code>.</p>
-    <p><strong>Les mots sont toujours séparés par un tiret <code>-</code></strong> (la touche 6 sur le clavier).</p>
-    <p><strong>Règles d'or :</strong></p>
-    <ul>
-      <li>Un mot de passe <strong>différent</strong> pour chaque site.</li>
-      <li>Ne le donne <strong>jamais</strong> à un copain ou une copine, seulement à tes parents.</li>
-      <li>Aucun mot de passe n'est envoyé sur internet : tout se passe sur cet ordinateur.</li>
-    </ul>
-  </div>
+  <main>
+    <h1><span class="lock">🔐</span> Mon mot de passe secret</h1>
+    <p class="sub">Un animal, une couleur, un véhicule et l'heure du départ</p>
+
+    <div class="card">
+      <div class="reels">
+        <div class="reel animal" id="reel-animal">
+          <div class="label">Animal</div>
+          <span class="pic">❔</span>
+          <div class="word"></div>
+        </div>
+        <div class="reel color" id="reel-color">
+          <div class="label">Couleur</div>
+          <span class="pic">❔</span>
+          <div class="word"></div>
+        </div>
+        <div class="reel vehicle" id="reel-vehicle">
+          <div class="label">Véhicule</div>
+          <span class="pic">❔</span>
+          <div class="word"></div>
+        </div>
+        <div class="reel hour" id="reel-hour">
+          <div class="label">Départ</div>
+          <span class="pic">❔</span>
+          <div class="word"></div>
+        </div>
+      </div>
+
+      <div class="road" aria-hidden="true"><span class="rider" id="rider"></span></div>
+
+      <div class="password-box">
+        <div id="password" aria-live="polite">…</div>
+      </div>
+
+      <div id="story"></div>
+
+      <div class="buttons">
+        <button id="generate" type="button"><span class="dice">🎲</span> Un autre !</button>
+        <button id="copy" type="button">📋 Copier</button>
+        <button id="hide" type="button" aria-pressed="false">🙈 Cacher</button>
+      </div>
+
+      <ul class="rules" id="rules"></ul>
+    </div>
+
+    <div class="tips">
+      <div class="tip"><span class="icon">🧠</span><div><strong>Pour bien le retenir :</strong> imagine la scène dans ta tête, comme un dessin animé.</div></div>
+      <div class="tip"><span class="icon">🕒</span><div><strong>À la fin, l'heure du départ</strong> avec un <strong>H</strong> majuscule pour « heure » : <code>-3H</code>.</div></div>
+      <div class="tip"><span class="icon">➖</span><div><strong>Les mots sont séparés par un tiret</strong> <code>-</code> (la touche 6 du clavier).</div></div>
+      <div class="tip"><span class="icon">🤫</span><div><strong>C'est un secret :</strong> un mot de passe différent pour chaque site, et tu ne le donnes qu'à tes parents.</div></div>
+      <div class="tip"><span class="icon">🛡️</span><div>Rien n'est envoyé sur internet : le mot de passe est tiré au hasard dans ton navigateur.</div></div>
+    </div>
+  </main>
 
 <script>
   // Short, common words with no accents and no spelling traps (no double
@@ -119,12 +367,21 @@
     ["Bison", "🦬"], ["Castor", "🦫"], ["Rat", "🐀"], ["Aigle", "🦅"],
     ["Serpent", "🐍"], ["Pingouin", "🐧"], ["Morse", "🦭"], ["Dino", "🦖"]
   ];
-  // Third item: how the colour reads in the story ("tout bleu", "tout en or").
+  // [word, emoji, tile background, tile text, how it reads in the story]
   const COLORS = [
-    ["Rouge", "🔴"], ["Bleu", "🔵"], ["Vert", "🟢"], ["Jaune", "🟡"],
-    ["Orange", "🟠"], ["Violet", "🟣"], ["Noir", "⚫"], ["Blanc", "⚪"],
-    ["Marron", "🟤"], ["Rose", "🩷"], ["Gris", "🩶"],
-    ["Or", "🥇", "tout en"], ["Argent", "🥈", "tout en"]
+    ["Rouge", "🔴", "#e53935", "#fff", "tout"],
+    ["Bleu", "🔵", "#1e88e5", "#fff", "tout"],
+    ["Vert", "🟢", "#43a047", "#fff", "tout"],
+    ["Jaune", "🟡", "#fdd835", "#3b3000", "tout"],
+    ["Orange", "🟠", "#fb8c00", "#fff", "tout"],
+    ["Violet", "🟣", "#8e24aa", "#fff", "tout"],
+    ["Noir", "⚫", "#212121", "#fff", "tout"],
+    ["Blanc", "⚪", "#ffffff", "#2b2d42", "tout"],
+    ["Marron", "🟤", "#6d4c41", "#fff", "tout"],
+    ["Rose", "🩷", "#f06292", "#fff", "tout"],
+    ["Gris", "🩶", "#9e9e9e", "#fff", "tout"],
+    ["Or", "🥇", "#ffc107", "#3b2a00", "tout en"],
+    ["Argent", "🥈", "#cfd8dc", "#2b2d42", "tout en"]
   ];
   // Vehicles all work with "en" in the story ("en camion", "en luge"),
   // so there is no un/une to get wrong.
@@ -134,7 +391,13 @@
     ["Voiture", "🚗"], ["Tram", "🚋"], ["Kayak", "🛶"], ["Luge", "🛷"],
     ["Kart", "🏎️"], ["Skate", "🛹"]
   ];
+  // 1 to 12: the number is the departure time, shown as a clock face. It is
+  // tied to "heure", which is not part of the password, so the child is never
+  // tempted to put a password word in the plural.
+  const CLOCKS = ["🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"];
   const SEPARATOR = "-";
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Uniform random integer in [0, max) using rejection sampling.
   function randomIndex(max) {
@@ -150,75 +413,201 @@
     return list[randomIndex(list.length)];
   }
 
-  function tile(bigHtml, word, bigClass) {
-    return '<div class="tile"><div class="' + bigClass + '">' + bigHtml +
-      '</div><div class="word">' + word + '</div></div>';
+  // Cosmetic only: the spinning faces do not need cryptographic randomness.
+  function anyEmoji(list, index) {
+    return list[Math.floor(Math.random() * list.length)][index];
   }
 
-  const emojiEl = document.getElementById("emoji");
-  const passwordEl = document.getElementById("password");
-  const storyEl = document.getElementById("story");
-  const rulesEl = document.getElementById("rules");
+  const $ = id => document.getElementById(id);
+  const reels = {
+    animal: $("reel-animal"),
+    color: $("reel-color"),
+    vehicle: $("reel-vehicle"),
+    hour: $("reel-hour")
+  };
+  const passwordEl = $("password");
+  const storyEl = $("story");
+  const rulesEl = $("rules");
+  const riderEl = $("rider");
+  const generateBtn = $("generate");
+  const copyBtn = $("copy");
+  const hideBtn = $("hide");
+
   let current = "";
+  let currentEmoji = [];
+
+  function setReel(reel, emoji, word) {
+    reel.querySelector(".pic").textContent = emoji;
+    reel.querySelector(".word").textContent = word;
+  }
+
+  function land(reel, emoji, word) {
+    reel.classList.remove("spinning");
+    setReel(reel, emoji, word);
+    reel.classList.remove("landed");
+    void reel.offsetWidth; // restart the pop animation
+    reel.classList.add("landed");
+  }
+
+  function paintColorReel(color) {
+    const reel = reels.color;
+    if (color) {
+      reel.style.backgroundColor = color[2];
+      reel.style.color = color[3];
+      reel.style.borderColor = color[0] === "Blanc" ? "#d5dae4" : "transparent";
+    } else {
+      reel.style.backgroundColor = "";
+      reel.style.color = "";
+      reel.style.borderColor = "";
+    }
+  }
+
+  function span(cls, text) {
+    return '<span class="' + cls + '">' + text + '</span>';
+  }
 
   function generate() {
     const [animal, animalEmoji] = pick(ANIMALS);
-    const [color, colorEmoji, colorLead = "tout"] = pick(COLORS);
+    const color = pick(COLORS);
+    const [colorWord, colorEmoji, , , colorLead] = color;
     const [vehicle, vehicleEmoji] = pick(VEHICLES);
-    // 1 to 12: the number is the departure time, shown as a clock face. The
-    // number is tied to "heure", which is not part of the password, so the
-    // child is never tempted to put a password word in the plural.
-    const CLOCKS = ["🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚", "🕛"];
     const hour = 1 + randomIndex(12);
     const clock = CLOCKS[hour - 1];
-    const hourWord = hour > 1 ? "heures" : "heure";
-    // Written like on a timetable: "-3H" for 3 heures.
     const hourPart = hour + "H";
+    const hourWord = hour > 1 ? "heures" : "heure";
 
-    current = animal + SEPARATOR + color + SEPARATOR + vehicle + SEPARATOR + hourPart;
+    current = [animal, colorWord, vehicle, hourPart].join(SEPARATOR);
+    currentEmoji = [animalEmoji, colorEmoji, vehicleEmoji, clock];
 
-    emojiEl.innerHTML =
-      tile(animalEmoji, animal, "big") +
-      tile(colorEmoji, color, "big") +
-      tile(vehicleEmoji, vehicle, "big") +
-      tile(clock, hourPart, "big");
-
-    passwordEl.innerHTML =
-      '<span class="animal">' + animal + '</span>' +
-      '<span class="extra">' + SEPARATOR + '</span>' +
-      '<span class="couleur">' + color + '</span>' +
-      '<span class="extra">' + SEPARATOR + '</span>' +
-      '<span class="vehicule">' + vehicle + '</span>' +
-      '<span class="extra">' + SEPARATOR + hourPart + '</span>';
-
-    storyEl.innerHTML =
-      animalEmoji + " Un <strong>" + animal.toLowerCase() + "</strong> " +
-      colorEmoji + " " + colorLead + " <strong>" + color.toLowerCase() + "</strong> part en " +
-      vehicleEmoji + " <strong>" + vehicle.toLowerCase() + "</strong> à " + clock + " <strong>" +
-      hour + " " + hourWord + "</strong>.";
-
-    const checks = [
-      [current.length >= 12, "Au moins 12 caractères (" + current.length + ")"],
-      [/[a-z]/.test(current), "Une minuscule"],
-      [/[A-Z]/.test(current), "Une majuscule"],
-      [/[0-9]/.test(current), "Un chiffre"],
-      [/[^A-Za-z0-9]/.test(current), "Un caractère spécial (le tiret -)"]
+    const finalFaces = [
+      [reels.animal, animalEmoji, animal],
+      [reels.color, colorEmoji, colorWord],
+      [reels.vehicle, vehicleEmoji, vehicle],
+      [reels.hour, clock, hourPart]
     ];
-    rulesEl.innerHTML = checks
-      .map(([ok, label]) => "<li>" + (ok ? "✅" : "❌") + " " + label + "</li>")
-      .join("");
+
+    function showResult() {
+      const sep = span("pw-sep", SEPARATOR);
+      passwordEl.classList.remove("reveal");
+      void passwordEl.offsetWidth;
+      passwordEl.innerHTML =
+        span("pw-animal", animal) + sep +
+        span("pw-color", colorWord) + sep +
+        span("pw-vehicle", vehicle) + sep +
+        span("pw-hour", hourPart);
+      passwordEl.querySelectorAll("span").forEach((s, i) => {
+        s.style.animationDelay = (i * 0.05) + "s";
+      });
+      passwordEl.classList.add("reveal");
+
+      storyEl.innerHTML =
+        animalEmoji + " Un <strong>" + animal.toLowerCase() + "</strong> " +
+        colorEmoji + " " + colorLead + " <strong>" + colorWord.toLowerCase() +
+        "</strong> part en " + vehicleEmoji + " <strong>" + vehicle.toLowerCase() +
+        "</strong> à " + clock + " <strong>" + hour + " " + hourWord + "</strong>.";
+
+      riderEl.textContent = vehicleEmoji + animalEmoji;
+      riderEl.classList.remove("go");
+      void riderEl.offsetWidth;
+      riderEl.classList.add("go");
+
+      const checks = [
+        [current.length >= 12, "12 caractères ou plus"],
+        [/[a-z]/.test(current), "minuscule"],
+        [/[A-Z]/.test(current), "majuscule"],
+        [/[0-9]/.test(current), "chiffre"],
+        [/[^A-Za-z0-9]/.test(current), "caractère spécial"]
+      ];
+      rulesEl.innerHTML = checks
+        .map(([ok, label]) => '<li data-ok="' + ok + '">' + (ok ? "✅ " : "❌ ") + label + "</li>")
+        .join("");
+      rulesEl.querySelectorAll("li").forEach((li, i) => {
+        if (li.dataset.ok !== "true") return;
+        if (reduceMotion) li.classList.add("ok");
+        else setTimeout(() => li.classList.add("ok"), 120 * i);
+      });
+
+      generateBtn.disabled = false;
+    }
+
+    if (reduceMotion) {
+      finalFaces.forEach(([reel, emoji, word]) => setReel(reel, emoji, word));
+      paintColorReel(color);
+      showResult();
+      return;
+    }
+
+    // Slot machine: every reel spins, then they stop one after the other.
+    generateBtn.disabled = true;
+    passwordEl.innerHTML = "🎰 …";
+    storyEl.innerHTML = "&nbsp;";
+    paintColorReel(null);
+
+    const sources = [[ANIMALS, 1], [COLORS, 1], [VEHICLES, 1], [CLOCKS.map(c => [c, c]), 0]];
+    Object.values(reels).forEach(reel => {
+      reel.classList.remove("landed");
+      reel.classList.add("spinning");
+      reel.querySelector(".word").textContent = "";
+    });
+    const ticker = setInterval(() => {
+      finalFaces.forEach(([reel], i) => {
+        if (reel.classList.contains("spinning")) {
+          reel.querySelector(".pic").textContent = anyEmoji(sources[i][0], sources[i][1]);
+        }
+      });
+    }, 70);
+
+    finalFaces.forEach(([reel, emoji, word], i) => {
+      setTimeout(() => {
+        land(reel, emoji, word);
+        if (reel === reels.color) paintColorReel(color);
+        if (i === finalFaces.length - 1) {
+          clearInterval(ticker);
+          showResult();
+        }
+      }, 550 + i * 280);
+    });
   }
 
-  document.getElementById("generate").addEventListener("click", generate);
-  document.getElementById("copy").addEventListener("click", async () => {
-    const btn = document.getElementById("copy");
+  function confetti(fromEl) {
+    if (reduceMotion) return;
+    const box = fromEl.getBoundingClientRect();
+    const x = box.left + box.width / 2;
+    const y = box.top + box.height / 2;
+    const pieces = currentEmoji.concat(["✨", "⭐", "🎉", "✨"]);
+    for (let i = 0; i < 16; i++) {
+      const el = document.createElement("span");
+      el.className = "confetti";
+      el.textContent = pieces[i % pieces.length];
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 80 + Math.random() * 120;
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      el.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+      el.style.setProperty("--dy", Math.sin(angle) * dist - 40 + "px");
+      el.style.setProperty("--rot", (Math.random() * 360 - 180) + "deg");
+      document.body.appendChild(el);
+      el.addEventListener("animationend", () => el.remove());
+    }
+  }
+
+  generateBtn.addEventListener("click", generate);
+
+  copyBtn.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(current);
-      btn.textContent = "✅ Copié !";
+      copyBtn.textContent = "✅ Copié !";
+      confetti(copyBtn);
     } catch {
-      btn.textContent = "Copie impossible";
+      copyBtn.textContent = "Copie impossible";
     }
-    setTimeout(() => { btn.textContent = "📋 Copier"; }, 1500);
+    setTimeout(() => { copyBtn.textContent = "📋 Copier"; }, 1500);
+  });
+
+  hideBtn.addEventListener("click", () => {
+    const hidden = passwordEl.classList.toggle("hidden");
+    hideBtn.setAttribute("aria-pressed", String(hidden));
+    hideBtn.textContent = hidden ? "👀 Montrer" : "🙈 Cacher";
   });
 
   generate();
