@@ -11,4 +11,4 @@ Le mot de passe est composé d'un animal, d'une couleur, d'un véhicule et d'une
 - Au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial (`-`).
 - Mots simples, sans accent ni piège d'orthographe.
 - Tirage aléatoire avec `crypto.getRandomValues`, entièrement dans le navigateur : rien n'est envoyé sur internet.
-- Environ 32 000 combinaisons : adapté aux sites qui bloquent les essais répétés, pas aux comptes importants.
+- Environ 61 000 combinaisons (28 animaux × 13 couleurs × 14 véhicules × 12 heures) : adapté aux sites qui bloquent les essais répétés, pas aux comptes importants.

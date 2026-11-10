@@ -115,19 +115,24 @@
     ["Ours", "🐻"], ["Loup", "🐺"], ["Panda", "🐼"], ["Koala", "🐨"],
     ["Tigre", "🐯"], ["Cheval", "🐴"], ["Canard", "🦆"], ["Mouton", "🐑"],
     ["Cochon", "🐷"], ["Requin", "🦈"], ["Renard", "🦊"], ["Hibou", "🦉"],
-    ["Poulpe", "🐙"], ["Singe", "🐵"], ["Crabe", "🦀"], ["Dragon", "🐉"]
+    ["Poulpe", "🐙"], ["Singe", "🐵"], ["Crabe", "🦀"], ["Dragon", "🐉"],
+    ["Bison", "🦬"], ["Castor", "🦫"], ["Rat", "🐀"], ["Aigle", "🦅"],
+    ["Serpent", "🐍"], ["Pingouin", "🐧"], ["Morse", "🦭"], ["Dino", "🦖"]
   ];
+  // Third item: how the colour reads in the story ("tout bleu", "tout en or").
   const COLORS = [
     ["Rouge", "🔴"], ["Bleu", "🔵"], ["Vert", "🟢"], ["Jaune", "🟡"],
     ["Orange", "🟠"], ["Violet", "🟣"], ["Noir", "⚫"], ["Blanc", "⚪"],
-    ["Marron", "🟤"], ["Rose", "🩷"], ["Gris", "🩶"]
+    ["Marron", "🟤"], ["Rose", "🩷"], ["Gris", "🩶"],
+    ["Or", "🥇", "tout en"], ["Argent", "🥈", "tout en"]
   ];
   // Vehicles all work with "en" in the story ("en camion", "en luge"),
   // so there is no un/une to get wrong.
   const VEHICLES = [
     ["Avion", "✈️"], ["Bateau", "⛵"], ["Train", "🚂"], ["Moto", "🏍️"],
     ["Camion", "🚚"], ["Bus", "🚌"], ["Taxi", "🚕"], ["Tracteur", "🚜"],
-    ["Voiture", "🚗"], ["Tram", "🚋"], ["Kayak", "🛶"], ["Luge", "🛷"]
+    ["Voiture", "🚗"], ["Tram", "🚋"], ["Kayak", "🛶"], ["Luge", "🛷"],
+    ["Kart", "🏎️"], ["Skate", "🛹"]
   ];
   const SEPARATOR = "-";
 
@@ -158,7 +163,7 @@
 
   function generate() {
     const [animal, animalEmoji] = pick(ANIMALS);
-    const [color, colorEmoji] = pick(COLORS);
+    const [color, colorEmoji, colorLead = "tout"] = pick(COLORS);
     const [vehicle, vehicleEmoji] = pick(VEHICLES);
     // 1 to 12: the number is the departure time, shown as a clock face. The
     // number is tied to "heure", which is not part of the password, so the
@@ -188,7 +193,7 @@
 
     storyEl.innerHTML =
       animalEmoji + " Un <strong>" + animal.toLowerCase() + "</strong> " +
-      colorEmoji + " tout <strong>" + color.toLowerCase() + "</strong> part en " +
+      colorEmoji + " " + colorLead + " <strong>" + color.toLowerCase() + "</strong> part en " +
       vehicleEmoji + " <strong>" + vehicle.toLowerCase() + "</strong> à " + clock + " <strong>" +
       hour + " " + hourWord + "</strong>.";
 
